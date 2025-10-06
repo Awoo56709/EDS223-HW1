@@ -2,20 +2,21 @@
 title: "ej_screen"
 format: html
 editor: visual
+warning: False
+message: False
 ---
 
 ```{r}
-
+#imported necessary libraries for this analysis
 library(stars)
 library(tmap)
-
-```
-
-```{r}
 library(tidyverse)
 library(sf)
 library(here)
 
+```
+
+```{r}
 # read in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
 
@@ -30,46 +31,99 @@ los_angeles <- ejscreen %>%
 # find the average values for all variables within counties
 california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean, rm.na = TRUE)
 ```
-
-
 ```{r}
 
-# Map of PM2.5 concentration
+#Creating a map illustrating PM2.5 concentrations
+#Because LA County is very large and includes islands, custom bbox values were necessary to remove the islands included in the county
+#for a better view of the area related to the analysis
 tm_shape(los_angeles, bbox = c(-118.94,33.7,-117.64,34.8)) +
   tm_fill(
     col = "PM25",
     palette = "YlOrRd",
-    title = "PM2.5 (µg/m³)",
+    title = "PM2.5 (µg/m^3)",
     style = "quantile"
   ) +
-  tm_borders(alpha = 0.3) +
+  tm_borders() +
   tm_layout(
-    title = "Particulate Matter (PM2.5) Concentration in Los Angeles County",
+    main.title = "Particulate Matter (PM2.5) Concentration in Los Angeles County",
+    main.title.position = c("center", "top"),
     legend.outside = TRUE
   ) +
   tm_scale_bar(position = c("left", "bottom")) +
-  tm_compass(position = c("right", "top")) +
+  tm_compass(position = c("right", "bottom")) +
   tm_graticules()
-
-
 
 ```
+
 ```{r}
-tm_shape(los_angeles) +
+#Updating map to zoom into inner LA County, cutting off areas of the north including Antelope valley.
+tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
   tm_fill(
-    col = "P_MINORPCT",
-    palette = "Blues",
-    title = "% Minority Population",
+    col = "PM25",
+    palette = "YlOrRd",
+    title = "PM2.5 (µg/m^3)",
     style = "quantile"
   ) +
-  tm_borders(alpha = 0.3) +
+  tm_borders() +
   tm_layout(
-    title = "Demographic Vulnerability: Minority Population in Los Angeles County",
+    main.title = "Particulate Matter (PM2.5) Concentration in Los Angeles County",
+    main.title.position = c("center", "top"),
     legend.outside = TRUE
   ) +
   tm_scale_bar(position = c("left", "bottom")) +
+  tm_compass(position = c("right", "bottom")) +
+  tm_graticules()
+
+```
+
+
+```{r}
+#Based on the previous map, we want to narrow in on the areas that illustrate higher levels of particulate matter - specifically areas illustrating higher percentage of minority populations.
+#We used custom bbox values to focus on LA county's eastern area.
+
+tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
+  tm_polygons(
+    fill = "PEOPCOLORPCT",
+    fill.scale = tm_scale_intervals(values = "Blues", style = "quantile"),
+    fill.legend = tm_legend(title = "% Minority Population")
+  ) +
+  tm_borders() +
+  tm_title("Demographic Vulnerability: Minority Population in (Eastern) Los Angeles County") +
+  tm_scalebar(position = c("right", "bottom")) +
+  tm_compass(position = c("right", "top")) +
+  tm_graticules()
+```
+```{r}
+#Percentile for air toxics cancer risk
+
+tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
+  tm_polygons(
+    fill = "P_CANCER",
+    fill.scale = tm_scale_intervals(values = "YlOrRd", style = "quantile"),
+    fill.legend = tm_legend(title = "Percentile for Air Toxics Cancer Risk")
+  ) +
+  tm_borders() +
+  tm_title("Block Group Percentile for Air Toxics Cancer Risk in Los Angeles County") +
+  tm_scalebar(position = c("right", "bottom")) +
+  tm_compass(position = c("right", "top")) +
+  tm_graticules()
+```
+
+```{r}
+# Saving a map for README
+
+tm_shape(los_angeles, bbox = c(-118.38,33.8,-117.7,34.2)) +
+  tm_polygons(
+    fill = "PEOPCOLORPCT",
+    fill.scale = tm_scale_intervals(values = "Blues", style = "quantile"),
+    fill.legend = tm_legend(title = "% Minority Population")
+  ) +
+  tm_borders() +
+  tm_title("Demographic Vulnerability: Minority Population in (Eastern) Los Angeles County") +
+  tm_scalebar(position = c("right", "bottom")) +
   tm_compass(position = c("right", "top")) +
   tm_graticules()
 
+tmap_save(la_county_min, here::here("figs","la_county_part.jpg"))
 ```
 
