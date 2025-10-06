@@ -1,0 +1,75 @@
+ ---
+title: "ej_screen"
+format: html
+editor: visual
+---
+
+```{r}
+
+library(stars)
+library(tmap)
+
+```
+
+```{r}
+library(tidyverse)
+library(sf)
+library(here)
+
+# read in geodatabase of EJScreen data at the Census Block Group level
+ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
+
+# filter to a state you are interested in
+california <- ejscreen %>%
+  dplyr::filter(ST_ABBREV == "CA") 
+
+# filter to a county you are interested in
+los_angeles <- ejscreen %>%
+  dplyr::filter(CNTY_NAME %in% c("Los Angeles County"))
+
+# find the average values for all variables within counties
+california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean, rm.na = TRUE)
+```
+
+
+```{r}
+
+# Map of PM2.5 concentration
+tm_shape(los_angeles, bbox = c(-118.94,33.7,-117.64,34.8)) +
+  tm_fill(
+    col = "PM25",
+    palette = "YlOrRd",
+    title = "PM2.5 (µg/m³)",
+    style = "quantile"
+  ) +
+  tm_borders(alpha = 0.3) +
+  tm_layout(
+    title = "Particulate Matter (PM2.5) Concentration in Los Angeles County",
+    legend.outside = TRUE
+  ) +
+  tm_scale_bar(position = c("left", "bottom")) +
+  tm_compass(position = c("right", "top")) +
+  tm_graticules()
+
+
+
+```
+```{r}
+tm_shape(los_angeles) +
+  tm_fill(
+    col = "P_MINORPCT",
+    palette = "Blues",
+    title = "% Minority Population",
+    style = "quantile"
+  ) +
+  tm_borders(alpha = 0.3) +
+  tm_layout(
+    title = "Demographic Vulnerability: Minority Population in Los Angeles County",
+    legend.outside = TRUE
+  ) +
+  tm_scale_bar(position = c("left", "bottom")) +
+  tm_compass(position = c("right", "top")) +
+  tm_graticules()
+
+```
+
