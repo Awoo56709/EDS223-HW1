@@ -2,10 +2,11 @@
 title: "ej_screen"
 format: html
 editor: visual
-warning: false
-message: false
+execute:
+  message: false
+  warning: false
 code-fold: false
-echo: true
+
 ---
 
 ```{r}
@@ -21,7 +22,9 @@ library(here)
 ```{r}
 # read in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
+```
 
+```{r}
 # filter to a state you are interested in
 california <- ejscreen %>%
   dplyr::filter(ST_ABBREV == "CA") 
@@ -29,10 +32,9 @@ california <- ejscreen %>%
 # filter to a county you are interested in
 los_angeles <- ejscreen %>%
   dplyr::filter(CNTY_NAME %in% c("Los Angeles County"))
-
-# find the average values for all variables within counties
-california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean, rm.na = TRUE)
+  
 ```
+
 ```{r}
 
 #Creating a map illustrating PM2.5 concentrations
@@ -95,6 +97,7 @@ tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
   tm_compass(position = c("right", "bottom")) +
   tm_graticules()
 ```
+
 ```{r}
 #Percentile for air toxics cancer risk
 
@@ -112,4 +115,4 @@ tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
 ```
 # Conclusion
 
-Based on the above analysis of Los Angeles county and variables of interest, the overlays of maps illustrate that the variables "Particulate Matter in Air" and "Percentile for Toxics Cancer Risk" have a positive correlation, or rather, particulate matter increases the likeihood of cancer risk. Moreover, adding the "People of Color %" data, we can determine that these same high risk block groups are predominately minority populations. 
+Based on the above analysis of Los Angeles county and variables of interest, the overlays of maps illustrate that the variables "Particulate Matter in Air" and "Percentile for Toxics Cancer Risk" have a positive correlation, or rather, as particulate matter concentration increases the likelihood of cancer risk also increases. Furthermore, by adding the "People of Color %" data, we can determine that these same high risk block groups are predominately minority populations illustrating that people of color in this instance - in LA County - to develop ailments due to environmental factors such as air quality (particulate matter). 
