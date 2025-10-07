@@ -2,10 +2,11 @@
 title: "ej_screen"
 format: html
 editor: visual
-execute:
-  message: false
-  warning: false
 code-fold: false
+execute:
+  warning: false
+  message: false
+
 
 ---
 
@@ -42,10 +43,10 @@ los_angeles <- ejscreen %>%
 #for a better view of the area related to the analysis
 tm_shape(los_angeles, bbox = c(-118.94,33.7,-117.64,34.8)) +
   tm_polygons(
-    col = "PM25",
+    fill = "PM25",
     palette = "brewer.yl_or_rd",
     title = "PM2.5 (µg/m^3)",
-    fill.scale = "quantile"
+    fill.scale = "quantile",
   ) +
   tm_borders() +
   tm_layout(
@@ -63,7 +64,6 @@ tm_shape(los_angeles, bbox = c(-118.94,33.7,-117.64,34.8)) +
 #Updating map to zoom into inner LA County, cutting off areas of the north including Antelope valley.
 tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
   tm_polygons(
-    #col = "PM25",
     fill = "PM25",
     palette = "brewer.yl_or_rd",
     fill.legend = tm_legend(title = "PM2.5 (µg/m^3)"),
@@ -105,7 +105,7 @@ tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
 tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
   tm_polygons(
     fill = "P_CANCER",
-    fill.scale = tm_scale_intervals(values = "YlOrRd", style = "quantile"),
+    fill.scale = tm_scale_intervals(values = "brewer.yl_or_rd", style = "quantile"),
     fill.legend = tm_legend(title = "Percentile for Air Toxics Cancer Risk")
   ) +
   tm_borders() +
