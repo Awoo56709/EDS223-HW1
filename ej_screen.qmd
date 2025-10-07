@@ -70,7 +70,7 @@ tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
     main.title.position = c("center", "top"),
     legend.outside = TRUE
   ) +
-  tm_scale_bar(position = c("left", "bottom")) +
+  tm_scale_bar(position = c("right", "bottom")) +
   tm_compass(position = c("right", "bottom")) +
   tm_graticules()
 
@@ -78,10 +78,10 @@ tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
 
 
 ```{r}
-#Based on the previous map, we want to narrow in on the areas that illustrate higher levels of particulate matter - specifically areas illustrating higher percentage of minority populations.
-#We used custom bbox values to focus on LA county's eastern area.
+# Based on the previous map, we want to narrow in on the areas that illustrate higher levels of particulate matter - specifically areas of higher minority population percentage.
+# We used custom bbox values to focus on LA county's eastern area.
 
-tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
+tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
   tm_polygons(
     fill = "PEOPCOLORPCT",
     fill.scale = tm_scale_intervals(values = "Blues", style = "quantile"),
@@ -90,8 +90,10 @@ tm_shape(los_angeles, bbox = c(-118.55,33.7,-117.64,34.25)) +
   tm_borders() +
   tm_title("Demographic Vulnerability: Minority Population in (Eastern) Los Angeles County") +
   tm_scalebar(position = c("right", "bottom")) +
-  tm_compass(position = c("right", "top")) +
+  tm_compass(position = c("right", "bottom")) +
   tm_graticules()
+
+tmap_save(la_county_min, here::here("figs","la_county_part.jpg"))
 ```
 ```{r}
 #Percentile for air toxics cancer risk
@@ -105,25 +107,9 @@ tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
   tm_borders() +
   tm_title("Block Group Percentile for Air Toxics Cancer Risk in Los Angeles County") +
   tm_scalebar(position = c("right", "bottom")) +
-  tm_compass(position = c("right", "top")) +
+  tm_compass(position = c("right", "bottom")) +
   tm_graticules()
 ```
+# Conclusion
 
-```{r}
-# Saving a map for README
-
-tm_shape(los_angeles, bbox = c(-118.38,33.8,-117.7,34.2)) +
-  tm_polygons(
-    fill = "PEOPCOLORPCT",
-    fill.scale = tm_scale_intervals(values = "Blues", style = "quantile"),
-    fill.legend = tm_legend(title = "% Minority Population")
-  ) +
-  tm_borders() +
-  tm_title("Demographic Vulnerability: Minority Population in (Eastern) Los Angeles County") +
-  tm_scalebar(position = c("right", "bottom")) +
-  tm_compass(position = c("right", "top")) +
-  tm_graticules()
-
-tmap_save(la_county_min, here::here("figs","la_county_part.jpg"))
-```
-
+Based on the above analysis of Los Angeles county and variables of interest, the overlays of maps illustrate that the variables "Particulate Matter in Air" and "Percentile for Toxics Cancer Risk" have a positive correlation, or rather, particulate matter increases the likeihood of cancer risk. Moreover, adding the "People of Color %" data, we can determine that these same high risk block groups are predominately minority populations. 
