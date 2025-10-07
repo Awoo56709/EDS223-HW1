@@ -2,8 +2,10 @@
 title: "ej_screen"
 format: html
 editor: visual
-warning: False
-message: False
+warning: false
+message: false
+code-fold: false
+echo: true
 ---
 
 ```{r}
@@ -92,8 +94,6 @@ tm_shape(los_angeles, bbox = c(-118.32,33.8,-117.7,34.2)) +
   tm_scalebar(position = c("right", "bottom")) +
   tm_compass(position = c("right", "bottom")) +
   tm_graticules()
-
-tmap_save(la_county_min, here::here("figs","la_county_part.jpg"))
 ```
 ```{r}
 #Percentile for air toxics cancer risk
