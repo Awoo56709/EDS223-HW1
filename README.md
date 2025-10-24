@@ -1,4 +1,4 @@
-# EDS223-HW1: Environmental InJustice in Los Angeles County
+# EDS223-HW1: Environmental Injustice in Los Angeles County
 # Joshua Ferrer-Lozano
 # 10/6/2025
 
