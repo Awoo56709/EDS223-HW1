@@ -1,11 +1,11 @@
 # EDS223-HW1: Environmental Injustice in Los Angeles County
 # Joshua Ferrer-Lozano
-# 10/6/2025
+# 10/23/2025
+
+![LA County Particulate Matter](figs/la_county_part.jpg)
 
 # Purpose
 The purposes of this repository is to hold files and the analysis for EDS 223 Homework #1.
-
-![LA County Particulate Matter](figs/la_county_part.jpg)
 
 # Description
 
