@@ -34,8 +34,6 @@ EDS223-HW1
 │── .RData                        
 │── .Rhistory                     
 │── EDS223-HW1.Rproj
-│
-│
 │── ej_screen.qmd
 │── README.html       
 └── README.md
